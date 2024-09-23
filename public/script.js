@@ -98,6 +98,35 @@ document.addEventListener('DOMContentLoaded', () => {
         changeBackground(description);
     }
 
+    // Fetch news data from the backend
+    function fetchNews(city) {
+        const newsApiUrl = `/api/news?city=${city}`;
+        fetch(newsApiUrl)
+            .then(response => response.json())
+            .then(data => {
+                updateNews(data.articles.slice(0, 5)); // Limit to 5 articles
+            })
+            .catch(error => {
+                console.error('Error fetching news data:', error);
+            });
+    }
+
+    function updateNews(articles) {
+        const newsContainer = document.getElementById('news-articles');
+        newsContainer.innerHTML = ''; // Clear previous news
+
+        articles.forEach(article => {
+            const newsElement = document.createElement('div');
+            newsElement.className = 'news-article';
+            newsElement.innerHTML = `
+                <h3>${article.title}</h3>
+                <p>${article.description}</p>
+                <a href="${article.url}" target="_blank">Read more</a>
+            `;
+            newsContainer.appendChild(newsElement);
+        });
+    }
+
     
 
     function changeBackground(description) {
