@@ -66,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         forecastContainer.innerHTML = ''; // Clear previous forecast
 
        
+        const dates = [];
+        const temps = [];
 
         for (let i = 1; i < data.list.length; i += 8) {
             const forecast = data.list[i];
@@ -90,9 +92,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 forecastElement.classList.toggle('expanded');
             });
             forecastContainer.appendChild(forecastElement);
-
+            // Prepare data for the chart
+            dates.push(forecastDate);
+            temps.push(forecastTemp);
             
         }
+        
+        // Create or update the chart
+        const ctx = document.getElementById('weather-chart').getContext('2d');
+        if (weatherChart) {
+            weatherChart.data.labels = dates;
+            weatherChart.data.datasets[0].data = temps;
+            weatherChart.update();
+        } else {
+            weatherChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Temperature',
+                        data: temps,
+                        borderColor: '#4facfe',
+                        backgroundColor: 'rgba(79, 171, 255, 0.2)', // Light blue for background
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return `Temperature: ${tooltipItem.raw}°C`;
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 2,
+                            borderColor: '#4facfe',
+                            borderWidth: 5,
+                        },
+                        point: {
+                            radius: 5,
+                            backgroundColor: '#4facfe',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                            },
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: 10,
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
 
        
         changeBackground(description);
@@ -125,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             newsContainer.appendChild(newsElement);
         });
+
     }
 
     

@@ -232,3 +232,10 @@ body {
 .details:hover{
     transform: translateY(-5px);
 }
+
+.weather-chart {
+    margin-top: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
