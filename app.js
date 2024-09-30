@@ -4,6 +4,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import cors from 'cors';
 
 // Set up __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,7 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 const app = express();
+app.use(cors());
 
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
